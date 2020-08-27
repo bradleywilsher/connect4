@@ -1,0 +1,32 @@
+#container {
+    display: flex;
+    background-color:#647A53;
+    flex-direction: column;
+    align-items: center;
+}
+#container h1, h2{
+    margin : 0 auto;
+}
+
+/*
+98BA7F
+647A53
+CDFAAA
+303B28
+B8E099
+
+
+
+*/
+#header-div {
+    display: flex;
+    background-color:#98BA7F;
+    width:50%;   
+}
+
+#content-div {
+    display: flex;
+    background-color:#98BA7F;
+    width:50%;   
+}
+
