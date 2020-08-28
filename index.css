@@ -1,9 +1,17 @@
 body{
     background-color: blueviolet;
+    margin: 0 auto;
 }
 
 p {
     color: yellow;
+}
+
+#board-div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding:10px;
 }
 
 .ourSquare {
@@ -15,5 +23,6 @@ p {
 
 .ourRow {
   display: flex; 
-  flex-direction: row;  
+  flex-direction: column;  
+  margin: 0px;
 }
