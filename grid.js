@@ -1,10 +1,11 @@
+// module = module || {};
+// module.exports = {
+//     takeMove: takeMove,
+//     getBoard: getBoard
+// }
+
 const rows = 3;
 const cols =3;
-
-
-
-
-
 //Initalise an empty 2d array
 let board = Array(cols).fill().map(() => Array(rows));
 // console.log(board[1][1]);
@@ -33,7 +34,7 @@ for (let i =0; i < cols; i++) {
       square.className = "ourSquare";
       square.style = "background-color: blue;";
       square.id = "square" + i + j;
-      square.addEventListener("click", posClick.bind(null, i, j)) //start of EV
+      square.addEventListener("click", posClick.bind(null, i, j)) //
       col.appendChild(square);
     }
   }
@@ -45,6 +46,7 @@ function posClick(column, row, event) {
 }
 
 //Know player
+//Should proabbly remove inline styling here
 function drawPiece(column, row) {
     document.getElementById("square"+column+row).style = "background-color: yellow;";
 }
@@ -63,5 +65,12 @@ function takeMove(column) {
     // return 0;
 }
 
+
+function getBoard() {
+    return board;
+}
+
+
+//module.exports = grid;
 
  //hi 
