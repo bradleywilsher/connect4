@@ -1,28 +1,61 @@
 body{
-    background-color: blueviolet;
     margin: 0 auto;
 }
 
-p {
-    color: yellow;
+#welcomeBoard {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  margin-top: 2em;
 }
+
+#title {
+  display: flex;
+  justify-content: center;
+}
+#playerScore {
+
+}
+
 
 #board-div{
   display: flex;
+  justify-content: center;
+  margin-top: 15%;
+  padding: 10px;
+  
+}
+
+#board-border {
+  display: flex;
   flex-direction: row;
-  align-items: center;
-  padding:10px;
-}
-
-.ourSquare {
-  width: 30px;
-  height: 30px;
+  width: 33%;
+  justify-content: center;
   border: 1px solid black;
-  background-color: red
+  
 }
 
-.ourRow {
+.tokens {
+  display: felx;
+  width: 100%;
+  height: 100%;
+  /*border-radius: 50%;*/
+  background-color: rgb(206, 69, 69);
+}
+
+
+.squares {
+  display: flex;
+  height: 50px;
+  width: 100%;
+  border: 1px solid black;
+  background-color: rgb(208, 208, 214);
+ 
+}
+
+.cols {
   display: flex; 
   flex-direction: column;  
   margin: 0px;
+/* width: 33%;  width set dynamically in js file*/
 }

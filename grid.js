@@ -5,13 +5,9 @@
 // }
 
 const rows = 3;
-const cols =3;
+const cols = 5;
 //Initalise an empty 2d array
 let board = Array(cols).fill().map(() => Array(rows));
-// console.log(board[1][1]);
-// console.log(board[1]);
-
-
 
 //init array to null
 for (let i = 0; i < cols; i++) {
@@ -20,19 +16,20 @@ for (let i = 0; i < cols; i++) {
     }
 }
 
-console.log(board[1][1]);
-console.log(board[1]);
-console.log(board);
 
+const WIDTH = (100 / cols);    
 for (let i =0; i < cols; i++) {
     const col = document.createElement("div");
-    col.className = "ourRow";
-    document.getElementById("board-div").appendChild(col);
-      
+   
+    col.className = "cols"; 
+    col.style = `width: ${WIDTH}%;`;
+
+    $("#board-border").append(col);
+
     for (let j=0; j < rows; j++) {
       const square = document.createElement("div");
-      square.className = "ourSquare";
-      square.style = "background-color: blue;";
+      square.className = "squares";
+      //square.style = "background-color: blue;";
       square.id = "square" + i + j;
       square.addEventListener("click", posClick.bind(null, i, j)) //
       col.appendChild(square);
@@ -42,13 +39,16 @@ for (let i =0; i < cols; i++) {
 function posClick(column, row, event) {
     console.log(`column - ${column} row - ${row}  was clicked`);  
     takeMove(column);
-    console.log("++++++++++++++++++++++")
 }
 
 //Know player
 //Should proabbly remove inline styling here
 function drawPiece(column, row) {
-    document.getElementById("square"+column+row).style = "background-color: yellow;";
+    //document.getElementById("square"+column+row).style = "background-color: yellow;";
+    const piece = document.createElement("div");
+    piece.id = piece + column + row;
+    piece.className = "tokens";
+    document.getElementById("square"+column+row).appendChild(piece);
 }
 
 function takeMove(column) {
