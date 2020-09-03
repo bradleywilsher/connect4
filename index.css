@@ -6,6 +6,7 @@ body{
   display: flex;
   position: relative;
   justify-content: center;
+  flex-direction: column;
   margin-top: 2em;
 }
 

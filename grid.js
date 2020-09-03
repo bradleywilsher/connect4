@@ -24,6 +24,7 @@ for (let i =0; i < cols; i++) {
     col.className = "cols"; 
     col.style = `width: ${WIDTH}%;`;
 
+    // eslint-disable-next-line no-undef -- it does not link JQUERY
     $("#board-border").append(col);
 
     for (let j=0; j < rows; j++) {
@@ -57,7 +58,7 @@ function takeMove(column) {
     for (let i = row; i >= 0; i--) {
         if (board[column][i] === "hi") {
             console.log("Hi " + column + i + "is empty");
-            board[column][i] = "notEmpty"
+            board[column][i] = "notEmpty";
             drawPiece(column, i);
             break;
         } 

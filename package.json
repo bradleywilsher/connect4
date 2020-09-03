@@ -6,7 +6,9 @@
   "dependencies": {
     "jest": "^26.2.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^7.8.1"
+  },
   "scripts": {
     "test": "jest"
   },
