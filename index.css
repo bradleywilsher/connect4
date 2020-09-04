@@ -1,7 +1,6 @@
 body{
     margin: 0 auto;
 }
-
 #welcomeBoard {
   display: flex;
   position: relative;
@@ -14,8 +13,16 @@ body{
   display: flex;
   justify-content: center;
 }
-#playerScore {
+#playerScores {
+  display:flex;
+  margin-top: 1em;
+  justify-content: space-evenly;
+}
 
+#gameControls {
+  display: flex;
+  margin-top: 1em;
+  justify-content: space-evenly;
 }
 
 
@@ -36,6 +43,7 @@ body{
   
 }
 
+/* Why can't I add multiple classes via JS?  */
 .tokens {
   display: felx;
   width: 100%;
@@ -44,6 +52,19 @@ body{
   background-color: rgb(206, 69, 69);
 }
 
+.p1Token {
+  display: felx;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(206, 69, 69);
+}
+
+.p2Token {
+  display: felx;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(105, 118, 233);
+}
 
 .squares {
   display: flex;

@@ -4,67 +4,143 @@
 //     getBoard: getBoard
 // }
 
-const rows = 3;
+const rows = 4;
 const cols = 5;
+//Flips after each turn
+let p1Turn = true;
+const WIDTH = (100 / cols);
+const WINNUMBER = 4;
+
+
+//To be fully functional this should be the kick starter to everything
+// function gameInit() {
+
+// }
+
+
+
 //Initalise an empty 2d array
 let board = Array(cols).fill().map(() => Array(rows));
+boardInit();
 
-//init array to null
-for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-        board[i][j] = "hi";
+function boardInit() {
+    //init array to null
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            board[i][j] = "empty";
+        }
     }
 }
 
+//init array to null
+// for (let i = 0; i < cols; i++) {
+//     for (let j = 0; j < rows; j++) {
+//         board[i][j] = "empty";
+//     }
+// }
 
-const WIDTH = (100 / cols);    
-for (let i =0; i < cols; i++) {
+
+
+for (let i = 0; i < cols; i++) {
     const col = document.createElement("div");
-   
-    col.className = "cols"; 
+
+    col.className = "cols";
     col.style = `width: ${WIDTH}%;`;
 
     // eslint-disable-next-line no-undef -- it does not link JQUERY
     $("#board-border").append(col);
 
-    for (let j=0; j < rows; j++) {
-      const square = document.createElement("div");
-      square.className = "squares";
-      //square.style = "background-color: blue;";
-      square.id = "square" + i + j;
-      square.addEventListener("click", posClick.bind(null, i, j)) //
-      col.appendChild(square);
+    for (let j = 0; j < rows; j++) {
+        const square = document.createElement("div");
+        square.className = "squares";
+        square.id = "square" + i + j;
+        square.addEventListener("click", posClick.bind(null, i, j)) //
+        col.appendChild(square);
     }
-  }
+}
 
 function posClick(column, row, event) {
-    console.log(`column - ${column} row - ${row}  was clicked`);  
+    console.log(`column - ${column} row - ${row}  was clicked`);
     takeMove(column);
 }
 
 //Know player
 //Should proabbly remove inline styling here
-function drawPiece(column, row) {
-    //document.getElementById("square"+column+row).style = "background-color: yellow;";
-    const piece = document.createElement("div");
-    piece.id = piece + column + row;
-    piece.className = "tokens";
-    document.getElementById("square"+column+row).appendChild(piece);
+function drawToken(column, row) {
+
+    const token = document.createElement("div");
+    token.id = token + column + row;
+
+    //Assign each token to the appropriate player 
+    if (p1Turn) {
+        token.className += "p1Token";
+        p1Turn = false;
+    } else {
+        token.className += "p2Token";
+        p1Turn = true;
+    }
+    document.getElementById("square" + column + row).appendChild(token);
 }
 
+
+function checkWin(col, row) {
+    //Adjust number of rols/cols for the array length
+
+    let p1Score = 0;
+    let p2Score = 0;
+    
+
+    //Horizontal Win
+    for (let i = 0; i < cols; i++) {
+        if (board[i][row] === "p1") {
+            p1Score++;
+            if (p1Score >= WINNUMBER) {
+                console.log("p1Wins");
+                p1Score = 0;
+            }
+        } else {
+            p1Score = 0;
+            if (board[i][row] === "p2") {
+            p2Score++;
+            if (p2Score >= WINNUMBER) {
+                console.log("p2Wins");
+                p1Score = 0;
+            }
+            } else {
+                p2Score =0;
+            }
+
+        }
+
+
+    }
+}
+
+
+//Can make pure
+//inpure -> updates board array
+function updateBoard(column, row) {
+    if (p1Turn) {
+        board[column][row] = "p1"
+    } else {
+        board[column][row] = "p2"
+    }
+}
+
+
 function takeMove(column) {
-    let row = rows -1;
-    console.log("starting row is " + row);
+    let row = rows - 1;
     for (let i = row; i >= 0; i--) {
-        if (board[column][i] === "hi") {
-            console.log("Hi " + column + i + "is empty");
-            board[column][i] = "notEmpty";
-            drawPiece(column, i);
+        if (board[column][i] === "empty") {
+            updateBoard(column, i);
+            drawToken(column, i);
+            checkWin(column, i);
             break;
-        } 
+        }
     }
     // return 0;
 }
+
 
 
 function getBoard() {
@@ -73,5 +149,3 @@ function getBoard() {
 
 
 //module.exports = grid;
-
- //hi 
