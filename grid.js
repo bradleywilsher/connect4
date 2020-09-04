@@ -1,8 +1,6 @@
-// module = module || {};
-// module.exports = {
-//     takeMove: takeMove,
-//     getBoard: getBoard
-// }
+
+
+
 
 const rows = 4;
 const cols = 5;
@@ -119,12 +117,13 @@ function checkWin(col, row) {
 
 //Can make pure
 //inpure -> updates board array
-function updateBoard(column, row) {
+function updateBoard(column, row, localBoard) {
     if (p1Turn) {
-        board[column][row] = "p1"
+        localBoard[column][row] = "p1"
     } else {
-        board[column][row] = "p2"
+        localBoard[column][row] = "p2"
     }
+    return localBoard;
 }
 
 
@@ -132,7 +131,7 @@ function takeMove(column) {
     let row = rows - 1;
     for (let i = row; i >= 0; i--) {
         if (board[column][i] === "empty") {
-            updateBoard(column, i);
+            updateBoard(column, i, board);
             drawToken(column, i);
             checkWin(column, i);
             break;
@@ -147,5 +146,11 @@ function getBoard() {
     return board;
 }
 
+//functions names in {}
 
-//module.exports = grid;
+
+if (typeof module !== 'undefined') {
+    module.exports = {
+        boardInit,
+    }
+}
