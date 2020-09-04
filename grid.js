@@ -8,7 +8,8 @@ const cols = 5;
 let p1Turn = true;
 const WIDTH = (100 / cols);
 const WINNUMBER = 4;
-
+let gameScoreP1 =0;
+let gameScoreP2 =0;
 
 //To be fully functional this should be the kick starter to everything
 // function gameInit() {
@@ -72,16 +73,16 @@ function drawToken(column, row) {
     //Assign each token to the appropriate player 
     if (p1Turn) {
         token.className += "p1Token";
-        p1Turn = false;
+        //p1Turn = false;
     } else {
         token.className += "p2Token";
-        p1Turn = true;
+       // p1Turn = true;
     }
     document.getElementById("square" + column + row).appendChild(token);
 }
 
 
-function checkWin(col, row) {
+function checkWin(col, row, localBoard) {
     //Adjust number of rols/cols for the array length
 
     let p1Score = 0;
@@ -90,19 +91,22 @@ function checkWin(col, row) {
 
     //Horizontal Win
     for (let i = 0; i < cols; i++) {
-        if (board[i][row] === "p1") {
+        if (localBoard[i][row] === "p1") {
             p1Score++;
             if (p1Score >= WINNUMBER) {
                 console.log("p1Wins");
                 p1Score = 0;
+                return "p1"
+                
             }
         } else {
             p1Score = 0;
-            if (board[i][row] === "p2") {
+            if (localBoard[i][row] === "p2") {
             p2Score++;
             if (p2Score >= WINNUMBER) {
                 console.log("p2Wins");
                 p1Score = 0;
+                return "p2"
             }
             } else {
                 p2Score =0;
@@ -120,8 +124,10 @@ function checkWin(col, row) {
 function updateBoard(column, row, localBoard) {
     if (p1Turn) {
         localBoard[column][row] = "p1"
+        p1Turn = false;
     } else {
         localBoard[column][row] = "p2"
+        p1Turn = true;
     }
     return localBoard;
 }
@@ -131,16 +137,27 @@ function takeMove(column) {
     let row = rows - 1;
     for (let i = row; i >= 0; i--) {
         if (board[column][i] === "empty") {
-            updateBoard(column, i, board);
             drawToken(column, i);
-            checkWin(column, i);
+            let winner = checkWin(column, i, updateBoard(column, i, board));
+        
+            incScore(winner);
             break;
         }
     }
     // return 0;
 }
 
+function incScore(playerName) {
+    if (playerName === "p1") {
+        gameScoreP1++;
+       console.log("p1 score is" + gameScoreP1);
+    } 
+    if (playerName === "p2") {
+        gameScoreP2++;
+        console.log("p2 score is:" + gameScoreP2);
+    }
 
+}
 
 function getBoard() {
     return board;
