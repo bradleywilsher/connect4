@@ -4,14 +4,20 @@
   "description": "",
   "main": "place.js",
   "dependencies": {
-    "jest": "^26.2.2"
+    "jest": "^26.2.2",
+    "jquery": "^3.5.1"
   },
   "devDependencies": {
     "eslint": "^7.8.1"
   },
   "scripts": {
     "test": "jest"
+
   },
   "author": "",
-  "license": "ISC"
-}
+  "license": "ISC",
+  "jest": {
+    "setupFiles": ["./setup-jest.js"]
+  }
+
+} 
