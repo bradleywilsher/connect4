@@ -8,6 +8,9 @@ const WINNUMBER = 4;
 //Scores: player1, player2
 let playerScores = [0,0];
 const NOWIN = "noWin";
+const P1 = "p1"
+const P2 = "p2"
+
 //Initalise an empty 2d array
 let board = Array(cols).fill().map(() => Array(rows));
 boardInit();
@@ -21,6 +24,7 @@ function boardInit() {
     }
 }
 
+//Create board
 for (let i = 0; i < cols; i++) {
     const col = document.createElement("div");
     col.className = "cols";
@@ -41,13 +45,10 @@ function posClick(column, row, event) {
     takeMove(column);
 }
 
-//Know player
-//Should proabbly remove inline styling here
+//Inpure - update the GUI 
 function drawToken(column, row) {
-
     const token = document.createElement("div");
     token.id = token + column + row;
-
     //Assign each token to the appropriate player 
     if (p1Turn) {
         token.className += "p1Token";
@@ -59,33 +60,30 @@ function drawToken(column, row) {
     document.getElementById("square" + column + row).appendChild(token);
 }
 
-//Pure check winner
+//Pure check winner 
+//TODO check more efficently + other win conditions
 function checkWin(col, row, localBoard) {
     //Adjust number of rols/cols for the array length
     let p1Score = 0;
     let p2Score = 0;
     //Horizontal Win
     for (let i = 0; i < cols; i++) {
-        if (localBoard[i][row] === "p1") {
+        if (localBoard[i][row] === P1) {
             p1Score++;
             if (p1Score >= WINNUMBER) {
-                return "p1"
+                return P1
             }
         } else {
             p1Score = 0;
-            if (localBoard[i][row] === "p2") {
+            if (localBoard[i][row] === P2) {
             p2Score++;
             if (p2Score >= WINNUMBER) {
-                
-                return "p2"
+                return P2
             }
             } else {
                 p2Score =0;
             }
-
         }
-
-
     }
     //if no winner
     return  NOWIN;
@@ -94,9 +92,9 @@ function checkWin(col, row, localBoard) {
 //Pure JS board update
 function updateBoard(column, row, localBoard) {
     if (p1Turn) {
-        localBoard[column][row] = "p1"
+        localBoard[column][row] = P1
     } else {
-        localBoard[column][row] = "p2"
+        localBoard[column][row] = P2
     }
     return localBoard;
 }
@@ -116,11 +114,11 @@ function takeMove(column) {
 
 //Pure
 function incScore(winner, localPlayerScores ) {
-    if (winner === "p1") {
+    if (winner === P1) {
         localPlayerScores[0]++;
         return localPlayerScores
     } 
-    if (winner === "p2") {
+    if (winner === P2) {
         localPlayerScores[1]++;
         return localPlayerScores
     }
