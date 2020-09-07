@@ -84,7 +84,6 @@ function drawToken(column, row) {
 
 function checkWin(col, row, localBoard) {
     //Adjust number of rols/cols for the array length
-
     let p1Score = 0;
     let p2Score = 0;
     
@@ -139,7 +138,6 @@ function takeMove(column) {
         if (board[column][i] === "empty") {
             drawToken(column, i);
             let winner = checkWin(column, i, updateBoard(column, i, board));
-        
             incScore(winner);
             break;
         }
