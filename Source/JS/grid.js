@@ -23,13 +23,10 @@ function boardInit() {
 
 for (let i = 0; i < cols; i++) {
     const col = document.createElement("div");
-
     col.className = "cols";
     col.style = `width: ${WIDTH}%;`;
-
     // eslint-disable-next-line no-undef -- it does not link JQUERY
     $("#board-border").append(col);
-
     for (let j = 0; j < rows; j++) {
         const square = document.createElement("div");
         square.className = "squares";
@@ -62,15 +59,11 @@ function drawToken(column, row) {
     document.getElementById("square" + column + row).appendChild(token);
 }
 
-
-
 //Pure check winner
 function checkWin(col, row, localBoard) {
     //Adjust number of rols/cols for the array length
     let p1Score = 0;
     let p2Score = 0;
-    
-
     //Horizontal Win
     for (let i = 0; i < cols; i++) {
         if (localBoard[i][row] === "p1") {
@@ -98,20 +91,15 @@ function checkWin(col, row, localBoard) {
     return  NOWIN;
 }
 
-
-//Can make pure?
-//inpure -> updates turn
+//Pure JS board update
 function updateBoard(column, row, localBoard) {
     if (p1Turn) {
         localBoard[column][row] = "p1"
-        p1Turn = false;
     } else {
         localBoard[column][row] = "p2"
-        p1Turn = true;
     }
     return localBoard;
 }
-
 
 function takeMove(column) {
     let row = rows - 1;
@@ -123,11 +111,11 @@ function takeMove(column) {
             break;
         }
     }
+    p1Turn = !p1Turn;
 }
 
 //Pure
 function incScore(winner, localPlayerScores ) {
-   
     if (winner === "p1") {
         localPlayerScores[0]++;
         return localPlayerScores
@@ -138,7 +126,6 @@ function incScore(winner, localPlayerScores ) {
     }
 } 
 
-
 //Either pass in NOWIN or the player scores array
 function updateScoreBoard(winner, update) {
     if (winner !== NOWIN) {
@@ -146,15 +133,6 @@ function updateScoreBoard(winner, update) {
     $("#p2Score").text(update[1])
     } 
 }
-
-
-
-function getBoard() {
-    return board;
-}
-
-//functions names in {}
-
 
 if (typeof module !== 'undefined') {
     module.exports = {
