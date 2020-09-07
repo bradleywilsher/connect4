@@ -1,23 +1,13 @@
-
-
-
-
 const rows = 4;
 const cols = 5;
 //Flips after each turn
 let p1Turn = true;
 const WIDTH = (100 / cols);
 const WINNUMBER = 4;
-let gameScoreP1 =0;
-let gameScoreP2 =0;
 
-//To be fully functional this should be the kick starter to everything
-// function gameInit() {
-
-// }
-
-
-
+//Scores: player1, player2
+let playerScores = [0,0];
+const NOWIN = "noWin";
 //Initalise an empty 2d array
 let board = Array(cols).fill().map(() => Array(rows));
 boardInit();
@@ -30,15 +20,6 @@ function boardInit() {
         }
     }
 }
-
-//init array to null
-// for (let i = 0; i < cols; i++) {
-//     for (let j = 0; j < rows; j++) {
-//         board[i][j] = "empty";
-//     }
-// }
-
-
 
 for (let i = 0; i < cols; i++) {
     const col = document.createElement("div");
@@ -82,6 +63,8 @@ function drawToken(column, row) {
 }
 
 
+
+//Pure check winner
 function checkWin(col, row, localBoard) {
     //Adjust number of rols/cols for the array length
     let p1Score = 0;
@@ -93,18 +76,14 @@ function checkWin(col, row, localBoard) {
         if (localBoard[i][row] === "p1") {
             p1Score++;
             if (p1Score >= WINNUMBER) {
-                console.log("p1Wins");
-                p1Score = 0;
                 return "p1"
-                
             }
         } else {
             p1Score = 0;
             if (localBoard[i][row] === "p2") {
             p2Score++;
             if (p2Score >= WINNUMBER) {
-                console.log("p2Wins");
-                p1Score = 0;
+                
                 return "p2"
             }
             } else {
@@ -115,11 +94,13 @@ function checkWin(col, row, localBoard) {
 
 
     }
+    //if no winner
+    return  NOWIN;
 }
 
 
-//Can make pure
-//inpure -> updates board array
+//Can make pure?
+//inpure -> updates turn
 function updateBoard(column, row, localBoard) {
     if (p1Turn) {
         localBoard[column][row] = "p1"
@@ -138,24 +119,35 @@ function takeMove(column) {
         if (board[column][i] === "empty") {
             drawToken(column, i);
             let winner = checkWin(column, i, updateBoard(column, i, board));
-            incScore(winner);
+            updateScoreBoard(winner, incScore(winner, playerScores));
             break;
         }
     }
-    // return 0;
 }
 
-function incScore(playerName) {
-    if (playerName === "p1") {
-        gameScoreP1++;
-       console.log("p1 score is" + gameScoreP1);
+//Pure
+function incScore(winner, localPlayerScores ) {
+   
+    if (winner === "p1") {
+        localPlayerScores[0]++;
+        return localPlayerScores
     } 
-    if (playerName === "p2") {
-        gameScoreP2++;
-        console.log("p2 score is:" + gameScoreP2);
+    if (winner === "p2") {
+        localPlayerScores[1]++;
+        return localPlayerScores
     }
+} 
 
+
+//Either pass in NOWIN or the player scores array
+function updateScoreBoard(winner, update) {
+    if (winner !== NOWIN) {
+    $("#p1Score").text(update[0])
+    $("#p2Score").text(update[1])
+    } 
 }
+
+
 
 function getBoard() {
     return board;
