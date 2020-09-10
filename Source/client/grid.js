@@ -11,6 +11,7 @@ const NOWIN = "noWin";
 const P1 = "p1"
 const P2 = "p2"
 
+
 //Initalise an empty 2d array
 let board = Array(cols).fill().map(() => Array(rows));
 boardInit();
@@ -42,7 +43,41 @@ for (let i = 0; i < cols; i++) {
 
 function posClick(column, row, event) {
     console.log(`column - ${column} row - ${row}  was clicked`);
-    takeMove(column);
+    if (column === 0) {
+        wipeBoard();
+    } else {
+        takeMove(column);
+    }
+    
+
+    // const body = {
+    //     col: column
+    // }
+    //  $.ajax({
+    //     type: "POST",
+    //     url: "/game/findPlace/",
+    //     data: JSON.stringify(body),
+    //     contentType: "application/json",
+    //     success: result => {
+    //         drawToken(column, result[1]);
+
+    //     },
+    //     dataType: "json"
+    //  })
+
+
+
+}
+
+function wipeBoard() {
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            let el = document.getElementById("square"+i+j);
+            el.classList.remove("p2Token")
+            el.classList.remove("p1Token")
+            console.log(el.childNodes);
+        }
+    }
 }
 
 //Inpure - update the GUI 
@@ -89,15 +124,7 @@ function checkWin(col, row, localBoard) {
     return  NOWIN;
 }
 
-//Pure JS board update
-function updateBoard(column, row, localBoard) {
-    if (p1Turn) {
-        localBoard[column][row] = P1
-    } else {
-        localBoard[column][row] = P2
-    }
-    return localBoard;
-}
+
 
 function takeMove(column) {
     let row = rows - 1;
@@ -105,6 +132,14 @@ function takeMove(column) {
         if (board[column][i] === "empty") {
             drawToken(column, i);
             let winner = checkWin(column, i, updateBoard(column, i, board));
+
+
+            //put result in the brackets to have a call back for when it has executed the get request
+            // $.get("http://localhost:8080/hello", () => {
+                
+            // })
+          
+
             updateScoreBoard(winner, incScore(winner, playerScores));
             break;
         }
@@ -131,6 +166,20 @@ function updateScoreBoard(winner, update) {
     $("#p2Score").text(update[1])
     } 
 }
+
+//Pure JS board update
+function updateBoard(column, row, localBoard) {
+    if (p1Turn) {
+        localBoard[column][row] = P1
+    } else {
+        localBoard[column][row] = P2
+    }
+    return localBoard;
+}
+
+
+
+
 
 if (typeof module !== 'undefined') {
     module.exports = {
