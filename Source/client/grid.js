@@ -15,7 +15,7 @@ const P2 = "p2"
 //Initalise an empty 2d array
 let board = Array(cols).fill().map(() => Array(rows));
 boardInit();
-
+newBoard();
 function boardInit() {
     //init array to null
     for (let i = 0; i < cols; i++) {
@@ -25,6 +25,14 @@ function boardInit() {
     }
 }
 
+document.getElementById("resGame").addEventListener("click", restartGame);
+
+function restartGame() {
+    console.log("hi res button");
+    wipeBoard();
+}
+
+function newBoard() { 
 //Create board
 for (let i = 0; i < cols; i++) {
     const col = document.createElement("div");
@@ -39,6 +47,7 @@ for (let i = 0; i < cols; i++) {
         square.addEventListener("click", posClick.bind(null, i, j)) //
         col.appendChild(square);
     }
+}
 }
 
 function posClick(column, row, event) {
@@ -65,25 +74,23 @@ function posClick(column, row, event) {
 
 }
 
-
-
-
-
-
-
-// function wipeBoard() {
-//     for (let i = 0; i < cols; i++) {
-//         for (let j = 0; j < rows; j++) {
-//             $("square"+i+j).removeClass("p2Token")
-//             $("square"+i+j).removeClass("p1Token")
-//         }
-//     }
-// }
+function wipeBoard() {
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            const square = document.getElementById("square"+i+j);
+       
+            if (square) {
+                console.log("try and remove: " + square.id);
+            square.removeChild;
+            }
+        }
+    }
+}
 
 //Inpure - update the GUI 
 function drawToken(column, row, p1Turn) {
     const token = document.createElement("div");
-    token.id = token + column + row;
+    token.id = "token" + column + row;
     //Assign each token to the appropriate player 
     if (p1Turn) {
         token.className += "p1Token";

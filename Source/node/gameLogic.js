@@ -97,7 +97,7 @@ console.log(board);
             state.pTurn = p1Turn;
             return state;
     }
-}
+ }
 }
 
 function updateBoard(column, row, localBoard) {
