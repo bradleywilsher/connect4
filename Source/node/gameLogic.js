@@ -5,8 +5,19 @@ const P2 = "p2"
 
 const rows = 4;
 const cols = 5;
+const WINNUMBER = 4;
+const NOWIN = "noWin";
 
 let p1Turn = true;
+let state = {
+    pTurn: p1Turn,
+    pieceRow: 0,
+    winner: "noWin",
+    //Scores: player1, player2
+    playerScores: [0,0]
+}
+
+
 
 let board = Array(cols).fill().map(() => Array(rows));
 initGame();
@@ -22,8 +33,6 @@ function boardInit() {
 
 function initGame() {
     boardInit();
-
-
 }
 
 
@@ -68,6 +77,7 @@ app.post('/game/board/col', (req, res) => {
   app.post('/game/findPlace', (req, res) => {
     console.log(req.body.col);
     res.json(findPlace(req.body.col));
+    takeTurn();
     //res.send("Hi");
   });
 
@@ -76,42 +86,69 @@ app.post('/game/board/col', (req, res) => {
 
 function findPlace(column) {
 console.log("Find place: " + column);
-
+console.log(board);
     let row = rows - 1;
     for (let i = row; i >= 0; i--) {
         if (board[column][i] === "empty") {
-            console.log("badaaa: " [column, i]);
-            return [column, i];
+            console.log("hi from loop");
+            state.winner = checkWin(column, i, updateBoard(column, i, board));
+            incScore(state.winner, state.playerScores)
+            state.pieceRow = i;
+            state.pTurn = p1Turn;
+            return state;
     }
 }
 }
 
-
-// function takeMove(column) {
-//     let row = rows - 1;
-//     for (let i = row; i >= 0; i--) {
-//         if (board[column][i] === "empty") {
-//             drawToken(column, i);
-//             let winner = checkWin(column, i, updateBoard(column, i, board));
-
-
-//             //put result in the brackets to have a call back for when it has executed the get request
-//             // $.get("http://localhost:8080/hello", () => {
-                
-//             // })
-          
-
-//             updateScoreBoard(winner, incScore(winner, playerScores));
-//             break;
-//         }
-//     }
-//     p1Turn = !p1Turn;
-// }
+function updateBoard(column, row, localBoard) {
+    if (p1Turn) {
+        localBoard[column][row] = P1
+    } else {
+        localBoard[column][row] = P2
+    }
+    return localBoard;
+}
 
 
 
-// app.get("/game/state/col:curcol"), (req,res) => {
-//     console.log
-// });
+//Pure check winner 
+//TODO check more efficently + other win conditions
+function checkWin(col, row, localBoard) {
+    //Adjust number of rols/cols for the array length
+    let p1Score = 0;
+    let p2Score = 0;
+    //Horizontal Win
+    for (let i = 0; i < cols; i++) {
+        if (localBoard[i][row] === P1) {
+            p1Score++;
+            if (p1Score >= WINNUMBER) {
+                return P1
+            }
+        } else {
+            p1Score = 0;
+            if (localBoard[i][row] === P2) {
+            p2Score++;
+            if (p2Score >= WINNUMBER) {
+                return P2
+            }
+            } else {
+                p2Score =0;
+            }
+        }
+    }
+    //if no winner
+    return  NOWIN;
+}
+
+function incScore(winner, localPlayerScores ) {
+    if (winner === P1) {
+        localPlayerScores[0]++;
+        return localPlayerScores
+    } 
+    if (winner === P2) {
+        localPlayerScores[1]++;
+        return localPlayerScores
+    }
+} 
 
 app.listen(8080);

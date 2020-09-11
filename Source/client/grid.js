@@ -1,7 +1,7 @@
 const rows = 4;
 const cols = 5;
-//Flips after each turn
-let p1Turn = true;
+// //Flips after each turn
+// let p1Turn = true;
 const WIDTH = (100 / cols);
 const WINNUMBER = 4;
 
@@ -43,45 +43,45 @@ for (let i = 0; i < cols; i++) {
 
 function posClick(column, row, event) {
     console.log(`column - ${column} row - ${row}  was clicked`);
-    if (column === 0) {
-        wipeBoard();
-    } else {
-        takeMove(column);
-    }
+  
+    //takeMove(column);
+   
     
 
-    // const body = {
-    //     col: column
-    // }
-    //  $.ajax({
-    //     type: "POST",
-    //     url: "/game/findPlace/",
-    //     data: JSON.stringify(body),
-    //     contentType: "application/json",
-    //     success: result => {
-    //         drawToken(column, result[1]);
-
-    //     },
-    //     dataType: "json"
-    //  })
-
-
-
-}
-
-function wipeBoard() {
-    for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-            let el = document.getElementById("square"+i+j);
-            el.classList.remove("p2Token")
-            el.classList.remove("p1Token")
-            console.log(el.childNodes);
-        }
+    const body = {
+        col: column
     }
+     $.ajax({
+        type: "POST",
+        url: "/game/findPlace/",
+        data: JSON.stringify(body),
+        contentType: "application/json",
+        success: result => {
+            drawToken(column, result.pieceRow, result.pTurn);
+            updateScoreBoard(result.winner, result.playerScores);
+        },
+        dataType: "json"
+     })
+
 }
+
+
+
+
+
+
+
+// function wipeBoard() {
+//     for (let i = 0; i < cols; i++) {
+//         for (let j = 0; j < rows; j++) {
+//             $("square"+i+j).removeClass("p2Token")
+//             $("square"+i+j).removeClass("p1Token")
+//         }
+//     }
+// }
 
 //Inpure - update the GUI 
-function drawToken(column, row) {
+function drawToken(column, row, p1Turn) {
     const token = document.createElement("div");
     token.id = token + column + row;
     //Assign each token to the appropriate player 
