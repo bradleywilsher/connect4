@@ -4,6 +4,8 @@
   "description": "",
   "main": "place.js",
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "jest": "^26.2.2",
     "jquery": "^3.5.1"
   },
@@ -12,12 +14,12 @@
   },
   "scripts": {
     "test": "jest"
-
   },
   "author": "",
   "license": "ISC",
   "jest": {
-    "setupFiles": ["./setup-jest.js"]
+    "setupFiles": [
+      "./setup-jest.js"
+    ]
   }
-
-} 
+}
