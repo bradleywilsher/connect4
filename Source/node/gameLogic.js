@@ -1,5 +1,9 @@
 // eslint-disable-next-line no-undef
 const express = require("express");
+
+const fs = require('fs').promises;
+
+
 const P1 = "p1"
 const P2 = "p2"
 
@@ -9,17 +13,17 @@ const WINNUMBER = 4;
 const NOWIN = "noWin";
 
 let p1Turn = true;
+
+let board = Array(cols).fill().map(() => Array(rows));
 let state = {
     pTurn: p1Turn,
     pieceRow: 0,
-    winner: "noWin",
+    winner: NOWIN,
     //Scores: player1, player2
-    playerScores: [0,0]
+    playerScores: [0,0],
+    board
 }
 
-
-
-let board = Array(cols).fill().map(() => Array(rows));
 initGame();
 function boardInit() {
     //init array to null
@@ -29,7 +33,6 @@ function boardInit() {
         }
     }
 }
-
 
 function initGame() {
     boardInit();
@@ -67,12 +70,22 @@ app.get("/hello", (req, res) => {
 });
 
 
+
+app.get("/game/board/restart", (req, res) => {
+    boardInit();
+    console.log("board after reset:")
+    console.log(state.board)
+    res.send("Board reset");
+});
+
 // app.put('/game/board/col/:j', (req, res) => {
 //     res.send(`Adding counter to column ${req.params.j} is:`);
 //   });
 app.post('/game/board/col', (req, res) => {
     res.json(updateBoard(req.body.column, req.body.row, board));
   });
+
+
 
   app.post('/game/findPlace', (req, res) => {
     console.log(req.body.col);
@@ -93,6 +106,7 @@ console.log(board);
             console.log("hi from loop");
             state.winner = checkWin(column, i, updateBoard(column, i, board));
             incScore(state.winner, state.playerScores)
+            writeScore(state.playerScores);
             state.pieceRow = i;
             state.pTurn = p1Turn;
             return state;
@@ -109,6 +123,19 @@ function updateBoard(column, row, localBoard) {
     return localBoard;
 }
 
+async function writeScore(scores) {
+    await fs.writeFile("../../Data/scores.json", JSON.stringify(scores), 'utf-8');
+
+    
+    const rawScores= await fs.readFile("../../Data/scores.json", "utf-8");
+    const parsedScores = JSON.parse(rawScores);
+
+    console.log("parsed scores is: " + parsedScores);
+    console.log("P1 score is: " + parsedScores[0]);
+    console.log("P1 score is: " + parsedScores[1]);
+    //const parsedUsers = JSON.parse(rawData);
+
+}
 
 
 //Pure check winner 
@@ -140,7 +167,9 @@ function checkWin(col, row, localBoard) {
     return  NOWIN;
 }
 
-function incScore(winner, localPlayerScores ) {
+async function incScore(winner, localPlayerScores ) {
+    // const rawScores= await fs.readFile("./data/users.json", "utf-8");
+    // const parsedUsers = JSON.parse(rawData);
     if (winner === P1) {
         localPlayerScores[0]++;
         return localPlayerScores
