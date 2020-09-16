@@ -1,7 +1,9 @@
 // eslint-disable-next-line no-undef
 const express = require("express");
 
-const fs = require('fs').promises;
+const fs = require('fs').promises
+const fsCheck = require('fs');
+//.promises;
 
 
 const P1 = "p1"
@@ -20,7 +22,7 @@ let state = {
     pieceRow: 0,
     winner: NOWIN,
     //Scores: player1, player2
-    playerScores: [0,0],
+    playerScores: [0, 0],
     board
 }
 
@@ -36,8 +38,30 @@ function boardInit() {
 
 function initGame() {
     boardInit();
+    getScore();
 }
 
+async function getScore() {
+
+
+    try {
+        if (fsCheck.existsSync('../../Data/scores.json')) {
+            console.log("file exists")
+            const rawScores = await fs.readFile("../../Data/scores.json", "utf-8");
+            const parsedScores = JSON.parse(rawScores);
+
+
+           
+            state.playerScores = parsedScores;
+            console.log("--------------------")
+            console.log("playerScores;");
+            console.log(state.playerScores[0]);
+            console.log(state.playerScores[1]);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 function updateBoard(column, row, localBoard) {
     if (p1Turn) {
@@ -55,7 +79,8 @@ function takeTurn() {
 //funciton that returns an app
 const app = express();
 // eslint-disable-next-line no-undef
-const cors = require("cors")
+const cors = require("cors");
+const { raw } = require("express");
 
 //gives all my client stuff to server
 app.use(express.static("../client"))
@@ -72,9 +97,9 @@ app.get("/hello", (req, res) => {
 
 
 app.get("/game/board/restart", (req, res) => {
-    boardInit();
+    initGame();
     console.log("board after reset:")
-    console.log(state.board)
+    console.log(state.board, state.scores)
     res.send("Board reset");
 });
 
@@ -83,37 +108,37 @@ app.get("/game/board/restart", (req, res) => {
 //   });
 app.post('/game/board/col', (req, res) => {
     res.json(updateBoard(req.body.column, req.body.row, board));
-  });
+});
 
 
 
-  app.post('/game/findPlace', (req, res) => {
+app.post('/game/findPlace', (req, res) => {
     console.log(req.body.col);
     res.json(findPlace(req.body.col));
     takeTurn();
     //res.send("Hi");
-  });
+});
 
 
 //res.json sends the response back
 
 function findPlace(column) {
-console.log("Find place: " + column);
-console.log(board);
+    console.log("Find place: " + column);
+    console.log(board);
     let row = rows - 1;
     for (let i = row; i >= 0; i--) {
         if (board[column][i] === "empty") {
             console.log("hi from loop");
             state.winner = checkWin(column, i, updateBoard(column, i, board));
-            
+
             //read score
             incScore(state.winner, state.playerScores)
             updateScore(state.playerScores);
             state.pieceRow = i;
             state.pTurn = p1Turn;
             return state;
+        }
     }
- }
 }
 
 function updateBoard(column, row, localBoard) {
@@ -126,15 +151,15 @@ function updateBoard(column, row, localBoard) {
 }
 
 async function updateScore(scores) {
-    
-    const rawScores= await fs.readFile("../../Data/scores.json", "utf-8");
-    const parsedScores = JSON.parse(rawScores);
+
+
+
 
     await fs.writeFile("../../Data/scores.json", JSON.stringify(scores), 'utf-8');
-    
-    console.log("parsed scores is: " + parsedScores);
-    console.log("P1 score is: " + parsedScores[0]);
-    console.log("P1 score is: " + parsedScores[1]);
+
+    // console.log("parsed scores is: " + parsedScores);
+    // console.log("P1 score is: " + parsedScores[0]);
+    // console.log("P1 score is: " + parsedScores[1]);
     //const parsedUsers = JSON.parse(rawData);
 
 }
@@ -160,30 +185,34 @@ function checkWin(col, row, localBoard) {
         } else {
             p1Score = 0;
             if (localBoard[i][row] === P2) {
-            p2Score++;
-            if (p2Score >= WINNUMBER) {
-                return P2
-            }
+                p2Score++;
+                if (p2Score >= WINNUMBER) {
+                    return P2
+                }
             } else {
-                p2Score =0;
+                p2Score = 0;
             }
         }
     }
     //if no winner
-    return  NOWIN;
+    return NOWIN;
 }
 
-async function incScore(winner, localPlayerScores ) {
+async function incScore(winner, localPlayerScores) {
     // const rawScores= await fs.readFile("./data/users.json", "utf-8");
     // const parsedUsers = JSON.parse(rawData);
+
+
+    // if (fs.existsSync(""../../Data/scores.json"")
+
     if (winner === P1) {
         localPlayerScores[0]++;
         return localPlayerScores
-    } 
+    }
     if (winner === P2) {
         localPlayerScores[1]++;
         return localPlayerScores
     }
-} 
+}
 
 app.listen(8080);
