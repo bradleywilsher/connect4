@@ -105,8 +105,10 @@ console.log(board);
         if (board[column][i] === "empty") {
             console.log("hi from loop");
             state.winner = checkWin(column, i, updateBoard(column, i, board));
+            
+            //read score
             incScore(state.winner, state.playerScores)
-            writeScore(state.playerScores);
+            updateScore(state.playerScores);
             state.pieceRow = i;
             state.pTurn = p1Turn;
             return state;
@@ -123,13 +125,13 @@ function updateBoard(column, row, localBoard) {
     return localBoard;
 }
 
-async function writeScore(scores) {
-    await fs.writeFile("../../Data/scores.json", JSON.stringify(scores), 'utf-8');
-
+async function updateScore(scores) {
     
     const rawScores= await fs.readFile("../../Data/scores.json", "utf-8");
     const parsedScores = JSON.parse(rawScores);
 
+    await fs.writeFile("../../Data/scores.json", JSON.stringify(scores), 'utf-8');
+    
     console.log("parsed scores is: " + parsedScores);
     console.log("P1 score is: " + parsedScores[0]);
     console.log("P1 score is: " + parsedScores[1]);
@@ -137,6 +139,10 @@ async function writeScore(scores) {
 
 }
 
+
+async function readScore() {
+
+}
 
 //Pure check winner 
 //TODO check more efficently + other win conditions
