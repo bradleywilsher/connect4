@@ -1,5 +1,11 @@
 // eslint-disable-next-line no-undef
 const express = require("express");
+
+const fs = require('fs').promises
+const fsCheck = require('fs');
+//.promises;
+
+
 const P1 = "p1"
 const P2 = "p2"
 
@@ -8,18 +14,18 @@ const cols = 5;
 const WINNUMBER = 4;
 const NOWIN = "noWin";
 
-let p1Turn = true;
-let state = {
-    pTurn: p1Turn,
-    pieceRow: 0,
-    winner: "noWin",
-    //Scores: player1, player2
-    playerScores: [0,0]
-}
-
 
 
 let board = Array(cols).fill().map(() => Array(rows));
+let state = {
+    p1Turn: true,
+    pieceRow: 0,
+    winner: NOWIN,
+    //Scores: player1, player2
+    playerScores: [0, 0],
+    board
+}
+
 initGame();
 function boardInit() {
     //init array to null
@@ -30,14 +36,35 @@ function boardInit() {
     }
 }
 
-
 function initGame() {
     boardInit();
+    getScore();
 }
 
+async function getScore() {
+
+
+    try {
+        if (fsCheck.existsSync('../../Data/scores.json')) {
+            console.log("file exists")
+            const rawScores = await fs.readFile("../../Data/scores.json", "utf-8");
+            const parsedScores = JSON.parse(rawScores);
+
+
+           
+            state.playerScores = parsedScores;
+            console.log("--------------------")
+            console.log("playerScores;");
+            console.log(state.playerScores[0]);
+            console.log(state.playerScores[1]);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 function updateBoard(column, row, localBoard) {
-    if (p1Turn) {
+    if (state.p1Turn) {
         localBoard[column][row] = P1
     } else {
         localBoard[column][row] = P2
@@ -45,14 +72,16 @@ function updateBoard(column, row, localBoard) {
     return localBoard;
 }
 
-function takeTurn() {
-    p1Turn = !p1Turn;
+function takeTurn(curTurn) {
+    console.log("Hi from take turn")
+    return !curTurn;
 }
 
 //funciton that returns an app
 const app = express();
 // eslint-disable-next-line no-undef
-const cors = require("cors")
+const cors = require("cors");
+const { raw } = require("express");
 
 //gives all my client stuff to server
 app.use(express.static("../client"))
@@ -67,49 +96,60 @@ app.get("/hello", (req, res) => {
 });
 
 
+
+app.get("/game/board/restart", (req, res) => {
+    initGame();
+    console.log("board after reset:")
+    console.log(state.board, state.scores)
+    res.send("Board reset");
+});
+
 // app.put('/game/board/col/:j', (req, res) => {
 //     res.send(`Adding counter to column ${req.params.j} is:`);
 //   });
 app.post('/game/board/col', (req, res) => {
     res.json(updateBoard(req.body.column, req.body.row, board));
-  });
+});
 
-  app.post('/game/findPlace', (req, res) => {
+
+
+app.post('/game/findPlace', (req, res) => {
     console.log(req.body.col);
     res.json(findPlace(req.body.col));
-    takeTurn();
     //res.send("Hi");
-  });
+});
 
 
 //res.json sends the response back
 
 function findPlace(column) {
-console.log("Find place: " + column);
-console.log(board);
+    console.log("Find place: " + column);
+    console.log(board);
     let row = rows - 1;
     for (let i = row; i >= 0; i--) {
         if (board[column][i] === "empty") {
             console.log("hi from loop");
             state.winner = checkWin(column, i, updateBoard(column, i, board));
+
+            //read score
             incScore(state.winner, state.playerScores)
+            updateScore(state.playerScores);
             state.pieceRow = i;
-            state.pTurn = p1Turn;
+            state.p1Turn = takeTurn(state.p1Turn);
             return state;
+        }
     }
 }
-}
 
-function updateBoard(column, row, localBoard) {
-    if (p1Turn) {
-        localBoard[column][row] = P1
-    } else {
-        localBoard[column][row] = P2
-    }
-    return localBoard;
+async function updateScore(scores) {
+    await fs.writeFile("../../Data/scores.json",
+     JSON.stringify(scores), 'utf-8');
 }
 
 
+async function readScore() {
+
+}
 
 //Pure check winner 
 //TODO check more efficently + other win conditions
@@ -127,28 +167,49 @@ function checkWin(col, row, localBoard) {
         } else {
             p1Score = 0;
             if (localBoard[i][row] === P2) {
-            p2Score++;
-            if (p2Score >= WINNUMBER) {
-                return P2
-            }
+                p2Score++;
+                if (p2Score >= WINNUMBER) {
+                    return P2
+                }
             } else {
-                p2Score =0;
+                p2Score = 0;
             }
         }
     }
     //if no winner
-    return  NOWIN;
+    return NOWIN;
 }
 
-function incScore(winner, localPlayerScores ) {
+function incScore(winner, localPlayerScores) {
+    // const rawScores= await fs.readFile("./data/users.json", "utf-8");
+    // const parsedUsers = JSON.parse(rawData);
+
+
+    // if (fs.existsSync(""../../Data/scores.json"")
+
     if (winner === P1) {
         localPlayerScores[0]++;
         return localPlayerScores
-    } 
+    }
     if (winner === P2) {
         localPlayerScores[1]++;
         return localPlayerScores
+    } else {
+        //no change
+        return localPlayerScores;
     }
-} 
+
+
+    //throw error if not noWin
+}
 
 app.listen(8080);
+
+
+if (typeof module !== 'undefined') {
+    module.exports = {
+        takeTurn,
+        incScore,
+        updateBoard
+    }
+}

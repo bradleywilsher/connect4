@@ -1,5 +1,10 @@
 # connect4
 
+
+How to reset the score state:
+
+1. Delete the scores.json file
+
 How to play:
 
 1. Open up the "index.html" file contained within the Source/HTML directory with your web browser of choice. 

@@ -19,7 +19,7 @@
   "license": "ISC",
   "jest": {
     "setupFiles": [
-      "./setup-jest.js"
+      "./Test/setup-jest.js"
     ]
   }
 }
