@@ -23,6 +23,7 @@ function restartGame() {
 }
 
 function newBoard() {
+
     //Create board
     for (let i = 0; i < cols; i++) {
         const col = document.createElement("div");
@@ -35,6 +36,8 @@ function newBoard() {
             square.className = "squares";
             square.id = "square" + i + j;
             square.addEventListener("click", posClick.bind(null, i, j)) //
+
+            //check board for player here and append 
             col.appendChild(square);
         }
     }
@@ -59,10 +62,8 @@ function posClick(column, row, event) {
 }
 
 function wipeBoard() {
-    
+
     $.get("http://localhost:8080/game/board/restart");
-    
-    
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             const square = document.getElementById("square" + i + j);
