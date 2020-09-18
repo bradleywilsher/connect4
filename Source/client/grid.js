@@ -54,7 +54,7 @@ function posClick(column, row, event) {
         data: JSON.stringify(body),
         contentType: "application/json",
         success: result => {
-            drawPiece(column, result.pieceRow, result.pTurn, result.winner);
+            drawPiece(column, result.pieceRow, result.p1Turn, result.winner);
             updateScoreBoard(result.winner, result.playerScores);
         },
         dataType: "json"

@@ -14,11 +14,11 @@ const cols = 5;
 const WINNUMBER = 4;
 const NOWIN = "noWin";
 
-let p1Turn = true;
+
 
 let board = Array(cols).fill().map(() => Array(rows));
 let state = {
-    pTurn: p1Turn,
+    p1Turn: true,
     pieceRow: 0,
     winner: NOWIN,
     //Scores: player1, player2
@@ -64,7 +64,7 @@ async function getScore() {
 }
 
 function updateBoard(column, row, localBoard) {
-    if (p1Turn) {
+    if (state.p1Turn) {
         localBoard[column][row] = P1
     } else {
         localBoard[column][row] = P2
@@ -72,8 +72,9 @@ function updateBoard(column, row, localBoard) {
     return localBoard;
 }
 
-function takeTurn() {
-    p1Turn = !p1Turn;
+function takeTurn(curTurn) {
+    console.log("Hi from take turn")
+    return !curTurn;
 }
 
 //funciton that returns an app
@@ -115,7 +116,6 @@ app.post('/game/board/col', (req, res) => {
 app.post('/game/findPlace', (req, res) => {
     console.log(req.body.col);
     res.json(findPlace(req.body.col));
-    takeTurn();
     //res.send("Hi");
 });
 
@@ -135,19 +135,10 @@ function findPlace(column) {
             incScore(state.winner, state.playerScores)
             updateScore(state.playerScores);
             state.pieceRow = i;
-            state.pTurn = p1Turn;
+            state.p1Turn = takeTurn(state.p1Turn);
             return state;
         }
     }
-}
-
-function updateBoard(column, row, localBoard) {
-    if (p1Turn) {
-        localBoard[column][row] = P1
-    } else {
-        localBoard[column][row] = P2
-    }
-    return localBoard;
 }
 
 async function updateScore(scores) {
@@ -198,7 +189,7 @@ function checkWin(col, row, localBoard) {
     return NOWIN;
 }
 
-async function incScore(winner, localPlayerScores) {
+function incScore(winner, localPlayerScores) {
     // const rawScores= await fs.readFile("./data/users.json", "utf-8");
     // const parsedUsers = JSON.parse(rawData);
 
@@ -212,7 +203,21 @@ async function incScore(winner, localPlayerScores) {
     if (winner === P2) {
         localPlayerScores[1]++;
         return localPlayerScores
+    } else {
+        //no change
+        return localPlayerScores;
     }
+
+
+    //throw error if not noWin
 }
 
 app.listen(8080);
+
+
+if (typeof module !== 'undefined') {
+    module.exports = {
+        takeTurn,
+        incScore
+    }
+}
