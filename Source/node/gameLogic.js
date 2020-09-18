@@ -142,17 +142,8 @@ function findPlace(column) {
 }
 
 async function updateScore(scores) {
-
-
-
-
-    await fs.writeFile("../../Data/scores.json", JSON.stringify(scores), 'utf-8');
-
-    // console.log("parsed scores is: " + parsedScores);
-    // console.log("P1 score is: " + parsedScores[0]);
-    // console.log("P1 score is: " + parsedScores[1]);
-    //const parsedUsers = JSON.parse(rawData);
-
+    await fs.writeFile("../../Data/scores.json",
+     JSON.stringify(scores), 'utf-8');
 }
 
 
@@ -218,6 +209,7 @@ app.listen(8080);
 if (typeof module !== 'undefined') {
     module.exports = {
         takeTurn,
-        incScore
+        incScore,
+        updateBoard
     }
 }

@@ -56,23 +56,25 @@ test("No win", () => {
 });
 
 
-
-
-
-// test("We can take a move", () => {
-//     p1Turn = true;
-//     P1 = "p1";
-//     P2 = "p2";
-
-
-//     let board = [["empty", "empty", "empty"]
-//     ["empty", "empty", "empty"]
-//     ["empty", "empty", "empty"]]
-
+test("update board state", () => {
     
-//     const newBoard = updateBoard(1,1, board);
+    //Arrange
+    let startBoard =  [
+    ["empty", "empty", "empty"]
+    ["empty", "empty", "empty"]
+    ["empty", "empty", "empty"]
+    ];
 
+    let expectedBoard =  [
+    ["empty", "empty", "empty"]
+    ["empty", "p1"   , "empty"]
+    ["empty", "empty", "empty"]
+    ];
 
-//     expect(newBoard[1][1]).toBe("P1");
+    //Act
+    const actualOutput = updateBoard(1,1, startBoard);
 
-// });
+    //Assert
+    expect(actualOutput).toStrictEqual(expectedOutput);
+
+});
