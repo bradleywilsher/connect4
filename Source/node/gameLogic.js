@@ -44,17 +44,9 @@ function initGame() {
 async function getScore() {
     try {
         if (fsCheck.existsSync('../../Data/scores.json')) {
-            console.log("file exists")
             const rawScores = await fs.readFile("../../Data/scores.json", "utf-8");
             const parsedScores = JSON.parse(rawScores);
-
-
-           
             state.playerScores = parsedScores;
-            console.log("--------------------")
-            console.log("playerScores;");
-            console.log(state.playerScores[0]);
-            console.log(state.playerScores[1]);
         }
     } catch (err) {
         console.log(err);
@@ -87,38 +79,24 @@ console.log(__dirname)
 app.use(cors());
 app.use(express.json());
 
-
-
 app.get("/hello", (req, res) => {
-    //console.log("hi from hello");
     res.json("world");
 });
 
-
-
 app.get("/game/board/restart", (req, res) => {
     initGame();
-    console.log("board after reset:")
-    console.log(state.board, state.scores)
     res.send("Board reset");
 });
 
-// app.put('/game/board/col/:j', (req, res) => {
-//     res.send(`Adding counter to column ${req.params.j} is:`);
-//   });
 app.post('/game/board/col', (req, res) => {
     res.json(updateBoard(req.body.column, req.body.row, board));
 });
 
-
-
 app.post('/game/findPlace', (req, res) => {
     res.json(findPlace(req.body.col));
-    //res.send("Hi");
 });
 
 app.get('/game/getState/', (req, res) => {
-    console.log("hi get state " + state.playerScores);
     res.json(state);
 });
 

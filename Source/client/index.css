@@ -72,5 +72,9 @@ body{
   display: flex; 
   flex-direction: column;  
   margin: 0px;
-/* width: 33%;  width set dynamically in js file*/
+  
+}
+
+.cols:hover {
+  background-color: yellow;
 }

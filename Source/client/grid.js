@@ -17,13 +17,11 @@ initState();
 document.getElementById("resGame").addEventListener("click", restartGame);
 
 function restartGame() {
-    console.log("hi res button");
     wipeBoard();
     //newBoard();
 }
 
 function initState() {
-   console.log("call state");
     $.ajax({
         type: "GET",
         url: "/game/getState/",
@@ -40,8 +38,6 @@ function initState() {
 
 
 function newBoard(state) {
-    //console.log("board in client: " + board)
-    //Create board
     for (let i = 0; i < cols; i++) {
         const col = document.createElement("div");
         col.className = "cols";
@@ -55,7 +51,6 @@ function newBoard(state) {
             square.id = "square" + i + j;
             square.addEventListener("click", posClick.bind(null, i, j)) //
 
-
             //Move out into function 
             let playerClass;
             if (state[i][j] === P1) {
@@ -66,9 +61,7 @@ function newBoard(state) {
             }
             }
 
-            //check board for player here and append 
             col.appendChild(square);
-            // drawPiece(i,j, state.board[i][j], NOWIN)
         }
     }
 }
@@ -118,7 +111,6 @@ function wipeBoard() {
         for (let j = 0; j < rows; j++) {
             const square = document.getElementById("square" + i + j);
             if (square) {
-                console.log("try and remove: " + square.id);
                 square.classList.remove(P1TOKEN);
                 square.classList.remove(P2TOKEN);
             }
@@ -130,20 +122,15 @@ function wipeBoard() {
 //Hacked the variable p1Turn so I can also call it with the value of the board when restarting
 function drawPiece(column, row, p1Turn, winner) {
    
-    console.log("winner is :" + winner)
-    console.log(p1Turn)
     if (winner !== NOWIN) {
         wipeBoard();
     } else {
     let playerClass;
     if (p1Turn === true) {
-        console.log("hi I think it is red")
         playerClass = P1TOKEN;
-        //p1Turn = false;
     } 
 
     if (p1Turn === false) {
-        console.log("hi I think it is blue")
         playerClass = P2TOKEN;
     }
 
