@@ -7,7 +7,10 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jest": "^26.2.2",
-    "jquery": "^3.5.1"
+    "jquery": "^3.5.1",
+    "super": "^0.2.3",
+    "supertest": "^4.0.2",
+    "test": "^0.6.0"
   },
   "devDependencies": {
     "eslint": "^7.8.1"
