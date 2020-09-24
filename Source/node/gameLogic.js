@@ -6,6 +6,8 @@ const fsCheck = require('fs');
 //.promises;
 
 
+
+
 const P1 = "p1"
 const P2 = "p2"
 
@@ -13,8 +15,6 @@ const rows = 4;
 const cols = 5;
 const WINNUMBER = 4;
 const NOWIN = "noWin";
-
-
 
 let board = Array(cols).fill().map(() => Array(rows));
 let state = {
@@ -73,7 +73,6 @@ function updateBoard(column, row, localBoard) {
 }
 
 function takeTurn(curTurn) {
-    console.log("Hi from take turn")
     return !curTurn;
 }
 
@@ -90,9 +89,11 @@ console.log(__dirname)
 app.use(cors());
 app.use(express.json());
 
+
+
 app.get("/hello", (req, res) => {
-    console.log("hi from hello");
-    res.send("world");
+    //console.log("hi from hello");
+    res.json("world");
 });
 
 
@@ -117,6 +118,11 @@ app.post('/game/findPlace', (req, res) => {
     console.log(req.body.col);
     res.json(findPlace(req.body.col));
     //res.send("Hi");
+});
+
+app.get('/game/getState/', (req, res) => {
+    console.log("hi")
+    res.json(state);
 });
 
 
@@ -146,9 +152,7 @@ async function updateScore(scores) {
      JSON.stringify(scores), 'utf-8');
 }
 
-
 async function readScore() {
-
 }
 
 //Pure check winner 
@@ -181,12 +185,6 @@ function checkWin(col, row, localBoard) {
 }
 
 function incScore(winner, localPlayerScores) {
-    // const rawScores= await fs.readFile("./data/users.json", "utf-8");
-    // const parsedUsers = JSON.parse(rawData);
-
-
-    // if (fs.existsSync(""../../Data/scores.json"")
-
     if (winner === P1) {
         localPlayerScores[0]++;
         return localPlayerScores
@@ -198,18 +196,24 @@ function incScore(winner, localPlayerScores) {
         //no change
         return localPlayerScores;
     }
-
-
     //throw error if not noWin
 }
 
-app.listen(8080);
 
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(8080, () => {
+      // eslint-disable-next-line no-console
+      console.log(`listening on port 8080...`);
+    });
+  }
 
 if (typeof module !== 'undefined') {
     module.exports = {
+        app,
         takeTurn,
         incScore,
-        updateBoard
+        updateBoard, 
+        boardInit,
+        checkWin
     }
 }

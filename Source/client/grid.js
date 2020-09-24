@@ -22,8 +22,20 @@ function restartGame() {
     //newBoard();
 }
 
-function newBoard() {
+function initState() {
+    $.ajax({
+        type: "GET",
+        url: "/game/getState/",
+        contentType: "application/json",
+        success: result => {
+            newBoard(result);
+        },
+        dataType: "json"
+    })
+}
 
+function newBoard() {
+    //console.log("board in client: " + board)
     //Create board
     for (let i = 0; i < cols; i++) {
         const col = document.createElement("div");
@@ -32,6 +44,7 @@ function newBoard() {
         // eslint-disable-next-line no-undef -- it does not link JQUERY
         $("#board-border").append(col);
         for (let j = 0; j < rows; j++) {
+            
             const square = document.createElement("div");
             square.className = "squares";
             square.id = "square" + i + j;
@@ -39,6 +52,7 @@ function newBoard() {
 
             //check board for player here and append 
             col.appendChild(square);
+            // drawPiece(i,j, state.board[i][j], NOWIN)
         }
     }
 }
@@ -62,7 +76,6 @@ function posClick(column, row, event) {
 }
 
 function wipeBoard() {
-
     $.get("http://localhost:8080/game/board/restart");
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
@@ -77,20 +90,26 @@ function wipeBoard() {
 }
 
 //Inpure - update the GUI 
+//Hacked the variable p1Turn so I can also call it with the value of the board when restarting
 function drawPiece(column, row, p1Turn, winner) {
    
     console.log("winner is :" + winner)
+    console.log(p1Turn)
     if (winner !== NOWIN) {
         wipeBoard();
     } else {
     let playerClass;
-    if (p1Turn) {
+    if (p1Turn === true || p1Turn === P1) {
+        console.log("hi I think it is red")
         playerClass = P1TOKEN;
         //p1Turn = false;
-    } else {
+    } 
+
+    if (p1Turn === false || p1Turn === P2) {
+        console.log("hi I think it is blue")
         playerClass = P2TOKEN;
-        // p1Turn = true;
     }
+
     document.getElementById("square" + column + row).classList.add(playerClass);
     }
 }
