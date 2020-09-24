@@ -42,8 +42,6 @@ function initGame() {
 }
 
 async function getScore() {
-
-
     try {
         if (fsCheck.existsSync('../../Data/scores.json')) {
             console.log("file exists")
@@ -115,13 +113,12 @@ app.post('/game/board/col', (req, res) => {
 
 
 app.post('/game/findPlace', (req, res) => {
-    console.log(req.body.col);
     res.json(findPlace(req.body.col));
     //res.send("Hi");
 });
 
 app.get('/game/getState/', (req, res) => {
-    console.log("hi")
+    console.log("hi get state " + state.playerScores);
     res.json(state);
 });
 
@@ -129,19 +126,16 @@ app.get('/game/getState/', (req, res) => {
 //res.json sends the response back
 
 function findPlace(column) {
-    console.log("Find place: " + column);
-    console.log(board);
     let row = rows - 1;
     for (let i = row; i >= 0; i--) {
         if (board[column][i] === "empty") {
-            console.log("hi from loop");
             state.winner = checkWin(column, i, updateBoard(column, i, board));
 
             //read score
-            incScore(state.winner, state.playerScores)
+            state.playerScores = incScore(state.winner, state.playerScores)
             updateScore(state.playerScores);
             state.pieceRow = i;
-            state.p1Turn = takeTurn(state.p1Turn);
+            state.p1Turn = !(state.p1Turn);
             return state;
         }
     }
