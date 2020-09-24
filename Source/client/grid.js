@@ -61,6 +61,7 @@ function newBoard(state) {
             }
             }
 
+            
             col.appendChild(square);
         }
     }
