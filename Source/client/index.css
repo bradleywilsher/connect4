@@ -18,6 +18,11 @@ body{
   margin-top: 1em;
   justify-content: space-evenly;
 }
+/* #playerScores:hover {
+  color: red;
+} */
+
+
 
 #gameControls {
   display: flex;
@@ -39,7 +44,7 @@ body{
   flex-direction: row;
   width: 33%;
   justify-content: center;
-  border: 1px solid black;
+  border: 1px solid black; 
   
 }
 
@@ -60,6 +65,26 @@ body{
   background-color: rgb(208, 208, 214);
 }
 
+/* .squares:hover {
+  background-color: yellow;
+} */
+
+
+
+.cols:hover  {
+  z-index: 10;
+  border-top-color: yellow;
+  
+
+
+
+  /* @keyframes mymove {
+    from {background-color: rgb(208, 208, 214);}
+    to {background-color: yellow}
+  } */
+
+}
+
 .p1Token {
   background-color: rgb(206, 69, 69);
 }
@@ -72,5 +97,6 @@ body{
   display: flex; 
   flex-direction: column;  
   margin: 0px;
-/* width: 33%;  width set dynamically in js file*/
+  
 }
+
