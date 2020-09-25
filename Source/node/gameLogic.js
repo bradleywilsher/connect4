@@ -3,7 +3,6 @@ const express = require("express");
 
 const fs = require('fs').promises
 const fsCheck = require('fs');
-//.promises;
 
 const P1 = "p1"
 const P2 = "p2"
@@ -66,6 +65,7 @@ app.get('/game/getState/', (req, res) => {
     res.json(state);
 });
 
+//Drops the token in the column that the user clicked into correct board position
 function findPlace(column) {
     let row = rows - 1;
     for (let i = row; i >= 0; i--) {
@@ -82,6 +82,7 @@ function findPlace(column) {
     }
 }
 
+//Reads current score the data file
 async function getScore() {
     try {
         if (fsCheck.existsSync('../../Data/scores.json')) {
@@ -94,6 +95,7 @@ async function getScore() {
     }
 }
 
+//Update board state
 function updateBoard(column, row, localBoard) {
     if (state.p1Turn) {
         localBoard[column][row] = P1
@@ -112,8 +114,8 @@ async function updateScore(scores) {
      JSON.stringify(scores), 'utf-8');
 }
 
-//Pure check winner 
-//TODO check more efficently
+//Check for: horizontal, vertical and diagonal wins
+//Should seperate out the 3 win types
 function checkWin(col, row, localBoard) {
     let p1Score = 0;
     let p2Score = 0;
@@ -162,7 +164,7 @@ function checkWin(col, row, localBoard) {
     }
 
   
-  //Diagnol win - courtesy of Connor Airid :) 
+  //Diagnol win - first transpose matrix
   let count = 0;
   const diagBoard = [];
   localBoard.flat().forEach((circle) => {
@@ -174,6 +176,7 @@ function checkWin(col, row, localBoard) {
     count += 1;
   });
 
+  //Diaganol win
   for (let row = 0; row < diagBoard.length - WINNUMBER + 1; row += 1) {
     let leftCounter = 0;
     let rightCounter = diagBoard[0].length - 1;
